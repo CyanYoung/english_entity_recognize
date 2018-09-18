@@ -57,10 +57,7 @@ models = {'dnn': load_model(map_path('dnn', paths)),
           'rnn_bi_crf': load_nn_crf('rnn_bi_crf', embed_mat, seq_len, len(label_inds), paths)}
 
 
-def crf_predict(words):
-    pairs = nltk.pos_tag(words)
-    words = [wnl.lemmatize(word, map_pos(tag)) for word, tag in pairs]
-    tags = [tag for word, tag in pairs]
+def crf_predict(words, tags):
     quaples = list()
     for word, tag in zip(words, tags):
         quaple = dict()
@@ -112,7 +109,10 @@ if __name__ == '__main__':
     while True:
         text = input('text: ')
         words = nltk.word_tokenize(text)
-        print('crf: %s' % crf_predict(words))
+        pairs = nltk.pos_tag(words)
+        words = [wnl.lemmatize(word, map_pos(tag)) for word, tag in pairs]
+        tags = [tag for word, tag in pairs]
+        print('crf: %s' % crf_predict(words, tags))
         print('dnn: %s' % dnn_predict(words, 'dnn'))
         print('rnn: %s' % rnn_predict(words, 'rnn'))
         print('rnn_bi: %s' % rnn_predict(words, 'rnn_bi'))
