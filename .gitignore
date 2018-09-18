@@ -1,0 +1,12 @@
+# system
+.DS_Store
+.idea/
+
+# python
+*.py[cod]
+*.so
+*.out
+
+# exceed
+word_vec.pkl
+sent_train.json
