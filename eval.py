@@ -5,7 +5,7 @@ from sklearn_crfsuite.metrics import flat_f1_score, flat_accuracy_score
 
 from recognize import crf_predict, dnn_predict, rnn_predict
 
-from util import map_func
+from util import map_item
 
 
 path_label_ind = 'feat/nn/label_ind.pkl'
@@ -31,7 +31,7 @@ def restore_word(quaples):
 
 
 def test(name, sents):
-    predict = map_func(name, funcs)
+    predict = map_item(name, funcs)
     label_mat = list()
     pred_mat = list()
     for text, quaples in sents.items():

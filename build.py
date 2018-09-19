@@ -14,7 +14,7 @@ from keras_contrib.layers import CRF as K_CRF
 
 from nn_arch import dnn, rnn, rnn_bi, rnn_bi_crf
 
-from util import map_path, map_func
+from util import map_item
 
 
 min_freq = 2
@@ -71,7 +71,7 @@ def nn_compile(name, embed_mat, seq_len, class_num):
                       weights=[embed_mat], input_length=seq_len, trainable=True)
     input = Input(shape=(seq_len,), dtype='int32')
     embed_input = embed(input)
-    func = map_func(name, funcs)
+    func = map_item(name, funcs)
     if name == 'rnn_bi_crf':
         crf = K_CRF(class_num)
         output = func(embed_input, crf)
@@ -91,7 +91,7 @@ def nn_fit(name, epoch, embed_mat, label_inds, path_feats):
     seq_len = len(train_sents[0])
     class_num = len(label_inds)
     model = nn_compile(name, embed_mat, seq_len, class_num)
-    check_point = ModelCheckpoint(map_path(name, paths), monitor='val_loss', verbose=True, save_best_only=True)
+    check_point = ModelCheckpoint(map_item(name, paths), monitor='val_loss', verbose=True, save_best_only=True)
     model.fit(train_sents, train_labels, batch_size=batch_size, epochs=epoch,
               verbose=True, callbacks=[check_point], validation_data=(dev_sents, dev_labels))
 

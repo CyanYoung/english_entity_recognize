@@ -12,12 +12,12 @@ from build import nn_compile
 from keras.models import load_model
 from keras.preprocessing.sequence import pad_sequences
 
-from util import map_pos, map_path, map_model
+from util import map_pos, map_item
 
 
 def load_nn_crf(name, embed_mat, seq_len, class_num, paths):
     model = nn_compile(name, embed_mat, seq_len, class_num)
-    model.load_weights(map_path(name, paths))
+    model.load_weights(map_item(name, paths))
     return model
 
 
@@ -51,9 +51,9 @@ paths = {'dnn': 'model/dnn.h5',
          'rnn_bi': 'model/rnn_bi.h5',
          'rnn_bi_crf': 'model/rnn_bi_crf.h5'}
 
-models = {'dnn': load_model(map_path('dnn', paths)),
-          'rnn': load_model(map_path('rnn', paths)),
-          'rnn_bi': load_model(map_path('rnn_bi', paths)),
+models = {'dnn': load_model(map_item('dnn', paths)),
+          'rnn': load_model(map_item('rnn', paths)),
+          'rnn_bi': load_model(map_item('rnn_bi', paths)),
           'rnn_bi_crf': load_nn_crf('rnn_bi_crf', embed_mat, seq_len, len(label_inds), paths)}
 
 
@@ -82,7 +82,7 @@ def dnn_predict(words, name):
         align_win = pad_sequences([buf_seq[:u_bound]], maxlen=win_len)[0]
         align_wins.append(align_win)
     align_wins = np.array(align_wins)
-    model = map_model(name, models)
+    model = map_item(name, models)
     probs = model.predict(align_wins)
     inds = np.argmax(probs, axis=1)
     preds = [ind_labels[ind] for ind in inds]
@@ -95,7 +95,7 @@ def dnn_predict(words, name):
 def rnn_predict(words, name):
     seq = word2ind.texts_to_sequences([' '.join(words)])[0]
     align_seq = pad_sequences([seq], maxlen=seq_len)
-    model = map_model(name, models)
+    model = map_item(name, models)
     probs = model.predict(align_seq)[0]
     inds = np.argmax(probs, axis=1)
     preds = [ind_labels[ind] for ind in inds[-len(words):]]
