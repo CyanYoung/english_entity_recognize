@@ -7,16 +7,31 @@ import enchant
 
 from featurize import sent2feat
 
-from build import nn_compile
-
-from keras.models import load_model
+from keras.models import Model, load_model
+from keras.layers import Input, Embedding
 from keras.preprocessing.sequence import pad_sequences
+
+from keras_contrib.layers import CRF as K_CRF
+
+from nn_arch import rnn_bi_crf
 
 from util import map_pos, map_item
 
 
+def define_nn_crf(name, embed_mat, seq_len, class_num):
+    vocab_num, embed_len = embed_mat.shape
+    embed = Embedding(input_dim=vocab_num, output_dim=embed_len,
+                      weights=[embed_mat], input_length=seq_len, trainable=True)
+    input = Input(shape=(seq_len,), dtype='int32')
+    embed_input = embed(input)
+    func = map_item(name, funcs)
+    crf = K_CRF(class_num)
+    output = func(embed_input, crf)
+    return Model(input, output)
+
+
 def load_nn_crf(name, embed_mat, seq_len, class_num, paths):
-    model = nn_compile(name, embed_mat, seq_len, class_num)
+    model = define_nn_crf(name, embed_mat, seq_len, class_num)
     model.load_weights(map_item(name, paths))
     return model
 
@@ -45,6 +60,8 @@ ind_labels = dict()
 for label, ind in label_inds.items():
     ind_labels[ind] = label
 
+
+funcs = {'rnn_bi_crf': rnn_bi_crf}
 
 paths = {'dnn': 'model/dnn.h5',
          'rnn': 'model/rnn.h5',

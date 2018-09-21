@@ -75,14 +75,15 @@ def nn_compile(name, embed_mat, seq_len, class_num):
     if name == 'rnn_bi_crf':
         crf = K_CRF(class_num)
         output = func(embed_input, crf)
-        model = Model(input, output)
-        model.compile(loss=crf.loss_function, optimizer=Adam(lr=0.001), metrics=[crf.accuracy])
+        loss = crf.loss_function
+        acc = crf.accuracy
     else:
         output = func(embed_input, class_num)
-        model = Model(input, output)
-        model.compile(loss='categorical_crossentropy', optimizer=Adam(lr=0.001), metrics=['accuracy'])
-    if __name__ == '__main__':
-        model.summary()
+        loss = 'categorical_crossentropy'
+        acc = 'accuracy'
+    model = Model(input, output)
+    model.summary()
+    model.compile(loss=loss, optimizer=Adam(lr=0.001), metrics=[acc])
     return model
 
 
