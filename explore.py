@@ -52,8 +52,7 @@ def statistic(path_train):
     count(path_vocab_freq, text_join, 'vocab')
     count(path_len_freq, text_lens, 'text_len')
     count(path_slot_freq, slots, 'slot')
-    metric = int(len(texts) / np.median(text_lens))
-    print('sent / word_per_sent: %d' % metric)
+    print('slot_per_sent: %d' % int(len(slots) / len(texts)))
 
 
 if __name__ == '__main__':
