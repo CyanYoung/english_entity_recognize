@@ -15,7 +15,7 @@ def sent2feat(quaples):
             'isdigit': word.isdigit(),
             'suffix_2': word.lower()[-2:],
             'suffix_3': word.lower()[-3:],
-            'pos': quaple['pos'],
+            'pos': quaple['pos']
         }
         if i > 0:
             last_quaple = quaples[i - 1]
@@ -24,7 +24,7 @@ def sent2feat(quaples):
                 'last_lower': last_word.lower(),
                 'last_isupper': last_word.isupper(),
                 'last_istitle': last_word.istitle(),
-                'last_pos': last_quaple['pos'],
+                'last_pos': last_quaple['pos']
             })
         else:
             word_feat['bos'] = True
@@ -35,7 +35,7 @@ def sent2feat(quaples):
                 'next_lower': next_word.lower(),
                 'next_isupper': next_word.isupper(),
                 'next_istitle': next_word.istitle(),
-                'next_pos': next_quaple['pos'],
+                'next_pos': next_quaple['pos']
             })
         else:
             word_feat['eos'] = True

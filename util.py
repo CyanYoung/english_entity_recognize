@@ -5,7 +5,7 @@ pos_dict = {'J': 'a',
 
 def map_pos(pos):
     if pos[0] in pos_dict:
-        return pos_dict[pos]
+        return pos_dict[pos[0]]
     else:
         return 'n'
 
