@@ -23,31 +23,26 @@ funcs = {'crf': crf_predict,
          'rnn_bi_crf': rnn_predict}
 
 
-def restore_word(quaples):
-    words = list()
-    for quaple in quaples:
-        words.append(quaple['word'])
-    return words
-
-
 def test(name, sents):
     predict = map_item(name, funcs)
     label_mat = list()
     pred_mat = list()
     for text, quaples in sents.items():
+        words = text.split()
+        tags = list()
         labels = list()
         for quaple in quaples:
+            tags.append(quaple['pos'])
             labels.append(quaple['label'])
         label_mat.append(labels)
-        words = restore_word(quaples)
         if name == 'crf':
-            pairs = predict(words)
+            pairs = predict(words, tags)
         else:
             pairs = predict(words, name)
         preds = [pred for word, pred in pairs]
         pred_mat.append(preds)
     f1 = flat_f1_score(label_mat, pred_mat, average='weighted', labels=slots)
-    print('\n%s %s %.2f' % (name, 'f1: ', f1))
+    print('\n%s %s %.2f' % (name, ' f1:', f1))
     print('%s %s %.2f' % (name, 'acc:', flat_accuracy_score(label_mat, pred_mat)))
 
 
