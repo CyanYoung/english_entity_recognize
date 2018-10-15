@@ -90,16 +90,16 @@ def crf_predict(words, tags):
 
 def dnn_predict(words, name):
     seq = word2ind.texts_to_sequences([' '.join(words)])[0]
-    align_wins = list()
+    trunc_wins = list()
     win_len = win_dist * 2 + 1
     buf = list(np.zeros(win_dist, dtype=int))
     buf_seq = buf + seq + buf
     for u_bound in range(win_len, len(buf_seq) + 1):
-        align_win = pad_sequences([buf_seq[:u_bound]], maxlen=win_len)[0]
-        align_wins.append(align_win)
-    align_wins = np.array(align_wins)
+        trunc_win = pad_sequences([buf_seq[:u_bound]], maxlen=win_len)[0]
+        trunc_wins.append(trunc_win)
+    trunc_wins = np.array(trunc_wins)
     model = map_item(name, models)
-    probs = model.predict(align_wins)
+    probs = model.predict(trunc_wins)
     inds = np.argmax(probs, axis=1)
     preds = [ind_labels[ind] for ind in inds]
     pairs = list()
@@ -110,9 +110,9 @@ def dnn_predict(words, name):
 
 def rnn_predict(words, name):
     seq = word2ind.texts_to_sequences([' '.join(words)])[0]
-    align_seq = pad_sequences([seq], maxlen=seq_len)
+    pad_seq = pad_sequences([seq], maxlen=seq_len)
     model = map_item(name, models)
-    probs = model.predict(align_seq)[0]
+    probs = model.predict(pad_seq)[0]
     inds = np.argmax(probs, axis=1)
     preds = [ind_labels[ind] for ind in inds[-len(words):]]
     pairs = list()
