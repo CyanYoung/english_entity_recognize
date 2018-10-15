@@ -12,7 +12,7 @@ from util import sent2label
 
 embed_len = 200
 max_vocab = 30000
-win_dist = 2
+win_dist = 3
 seq_len = 200
 
 path_word_vec = 'feat/nn/word_vec.pkl'

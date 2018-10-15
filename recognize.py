@@ -43,7 +43,7 @@ path_crf = 'model/crf.pkl'
 with open(path_crf, 'rb') as f:
     crf = pk.load(f)
 
-win_dist = 2
+win_dist = 3
 seq_len = 200
 
 path_word2ind = 'model/word2ind.pkl'
