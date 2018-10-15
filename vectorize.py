@@ -93,7 +93,7 @@ def pad(sents, path_word2ind, path_sent, path_label, mode):
         label_inds = pk.load(f)
     class_num = len(label_inds)
     ind_mat = list()
-    for i, quaples in zip(range(len(sents)), sents.values()):
+    for quaples in sents.values():
         inds = list()
         for quaple in quaples:
             inds.append(label_inds[quaple['label']])
