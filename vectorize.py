@@ -54,7 +54,7 @@ def label2ind(sents, path_label_ind):
         pk.dump(label_inds, f)
 
 
-def trunc(sents, path_word2ind, path_sent, path_label, mode):
+def trunc(sents, path_sent, path_label):
     texts = [text for text in sents.keys()]
     with open(path_word2ind, 'rb') as f:
         model = pk.load(f)
@@ -75,15 +75,14 @@ def trunc(sents, path_word2ind, path_sent, path_label, mode):
     for quaples in sents.values():
         for quaple in quaples:
             inds.append(label_inds[quaple['label']])
-    if mode == 'train' or mode == 'dev':
-        inds = to_categorical(inds, num_classes=class_num)
+    inds = to_categorical(inds, num_classes=class_num)
     with open(path_sent, 'wb') as f:
         pk.dump(align_wins, f)
     with open(path_label, 'wb') as f:
         pk.dump(inds, f)
 
 
-def pad(sents, path_word2ind, path_sent, path_label, mode):
+def pad(sents, path_sent, path_label):
     texts = [text for text in sents.keys()]
     with open(path_word2ind, 'rb') as f:
         model = pk.load(f)
@@ -98,8 +97,7 @@ def pad(sents, path_word2ind, path_sent, path_label, mode):
         for quaple in quaples:
             inds.append(label_inds[quaple['label']])
         pad_inds = pad_sequences([inds], maxlen=seq_len)[0]
-        if mode == 'train' or mode == 'dev':
-            pad_inds = to_categorical(pad_inds, num_classes=class_num)
+        pad_inds = to_categorical(pad_inds, num_classes=class_num)
         ind_mat.append(pad_inds)
     ind_mat = np.array(ind_mat)
     with open(path_sent, 'wb') as f:
@@ -114,8 +112,8 @@ def vectorize(paths, mode):
     if mode == 'train':
         embed(sents, path_word2ind, path_word_vec, path_embed)
         label2ind(sents, path_label_ind)
-    trunc(sents, path_word2ind, paths['win_sent'], paths['win_label'], mode)
-    pad(sents, path_word2ind, paths['seq_sent'], paths['seq_label'], mode)
+    trunc(sents, paths['win_sent'], paths['win_label'])
+    pad(sents, paths['seq_sent'], paths['seq_label'])
 
 
 if __name__ == '__main__':
