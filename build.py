@@ -9,6 +9,7 @@ from keras.models import Model
 from keras.layers import Input, Embedding
 from keras.optimizers import Adam
 from keras.callbacks import ModelCheckpoint
+from keras.utils import plot_model
 
 from keras_contrib.layers import CRF as K_CRF
 
@@ -35,7 +36,11 @@ funcs = {'dnn': dnn,
 paths = {'dnn': 'model/dnn.h5',
          'rnn': 'model/rnn.h5',
          'rnn_bi': 'model/rnn_bi.h5',
-         'rnn_bi_crf': 'model/rnn_bi_crf.h5'}
+         'rnn_bi_crf': 'model/rnn_bi_crf.h5',
+         'dnn_plot': 'model/plot/dnn.png',
+         'rnn_plot': 'model/plot/rnn.png',
+         'rnn_bi_plot': 'model/plot/rnn_bi.png',
+         'rnn_bi_crf_plot': 'model/plot/rnn_bi_crf.png'}
 
 
 def crf_fit(path_sent, path_label, path_crf):
@@ -83,6 +88,7 @@ def nn_compile(name, embed_mat, seq_len, class_num):
         acc = 'accuracy'
     model = Model(input, output)
     model.summary()
+    plot_model(model, map_item(name + '_plot', paths), show_shapes=True)
     model.compile(loss=loss, optimizer=Adam(lr=0.001), metrics=[acc])
     return model
 
