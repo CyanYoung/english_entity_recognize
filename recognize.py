@@ -60,7 +60,6 @@ ind_labels = dict()
 for label, ind in label_inds.items():
     ind_labels[ind] = label
 
-
 funcs = {'rnn_bi_crf': rnn_bi_crf}
 
 paths = {'dnn': 'model/dnn.h5',
