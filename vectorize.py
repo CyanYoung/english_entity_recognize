@@ -22,7 +22,7 @@ path_label_ind = 'feat/nn/label_ind.pkl'
 
 
 def embed(sents, path_word2ind, path_word_vec, path_embed):
-    texts = [text for text in sents.keys()]
+    texts = sents.keys()
     model = Tokenizer(num_words=max_vocab, filters='', lower=True, oov_token='OOV')
     model.fit_on_texts(texts)
     word_inds = model.word_index
@@ -55,19 +55,19 @@ def label2ind(sents, path_label_ind):
 
 
 def trunc(sents, path_sent, path_label):
-    texts = [text for text in sents.keys()]
+    texts = sents.keys()
     with open(path_word2ind, 'rb') as f:
         model = pk.load(f)
     seqs = model.texts_to_sequences(texts)
-    align_wins = list()
+    trunc_wins = list()
     win_len = win_dist * 2 + 1
     buf = list(np.zeros(win_dist, dtype=int))
     for seq in seqs:
         buf_seq = buf + seq + buf
         for u_bound in range(win_len, len(buf_seq) + 1):
-            align_win = pad_sequences([buf_seq[:u_bound]], maxlen=win_len)[0]
-            align_wins.append(align_win)
-    align_wins = np.array(align_wins)
+            trunc_win = pad_sequences([buf_seq[:u_bound]], maxlen=win_len)[0]
+            trunc_wins.append(trunc_win)
+    trunc_wins = np.array(trunc_wins)
     with open(path_label_ind, 'rb') as f:
         label_inds = pk.load(f)
     class_num = len(label_inds)
@@ -77,17 +77,17 @@ def trunc(sents, path_sent, path_label):
             inds.append(label_inds[quaple['label']])
     inds = to_categorical(inds, num_classes=class_num)
     with open(path_sent, 'wb') as f:
-        pk.dump(align_wins, f)
+        pk.dump(trunc_wins, f)
     with open(path_label, 'wb') as f:
         pk.dump(inds, f)
 
 
 def pad(sents, path_sent, path_label):
-    texts = [text for text in sents.keys()]
+    texts = sents.keys()
     with open(path_word2ind, 'rb') as f:
         model = pk.load(f)
     seqs = model.texts_to_sequences(texts)
-    align_seqs = pad_sequences(seqs, maxlen=seq_len)
+    pad_seqs = pad_sequences(seqs, maxlen=seq_len)
     with open(path_label_ind, 'rb') as f:
         label_inds = pk.load(f)
     class_num = len(label_inds)
@@ -101,7 +101,7 @@ def pad(sents, path_sent, path_label):
         ind_mat.append(pad_inds)
     ind_mat = np.array(ind_mat)
     with open(path_sent, 'wb') as f:
-        pk.dump(align_seqs, f)
+        pk.dump(pad_seqs, f)
     with open(path_label, 'wb') as f:
         pk.dump(ind_mat, f)
 
