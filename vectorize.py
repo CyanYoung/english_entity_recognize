@@ -23,7 +23,7 @@ path_label_ind = 'feat/nn/label_ind.pkl'
 
 def embed(sents, path_word2ind, path_word_vec, path_embed):
     texts = sents.keys()
-    model = Tokenizer(num_words=max_vocab, filters='', lower=True, oov_token='OOV')
+    model = Tokenizer(num_words=max_vocab, filters='', lower=True, oov_token='oov')
     model.fit_on_texts(texts)
     word_inds = model.word_index
     with open(path_word2ind, 'wb') as f:
