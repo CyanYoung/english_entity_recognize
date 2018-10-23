@@ -9,9 +9,10 @@ from featurize import sent2feat
 
 from keras.models import Model, load_model
 from keras.layers import Input, Embedding
-from keras.preprocessing.sequence import pad_sequences
 
 from keras_contrib.layers import CRF as K_CRF
+
+from keras.preprocessing.sequence import pad_sequences
 
 from nn_arch import rnn_bi_crf
 
