@@ -4,13 +4,13 @@
 
 prepare() 将每行数据分割为 (word, pos, chunk, label) 四元组
 
-map_pos() 将标准词性映射为 WordNetLemmatizer() 可识别的
+保存为 text 索引的字典，map_pos() 将标准词性映射为 lemmatize() 可识别的
 
 当 word 全字母、全小写时，使用 enchant 检查拼写错误
 
 #### 2.explore
 
-统计词汇、长度、实体的频率，条形图可视化，计算句词丰富度指标
+统计词汇、长度、实体的频率，条形图可视化，计算 slot_per_sent 指标
 
 #### 3.featurize
 
@@ -32,7 +32,7 @@ nn_fit() 分别通过 dnn、rnn、rnn_bi、rnn_bi_crf，train 80% / dev 20% 划�
 
 #### 6.recognize
 
-word_tokenize() 分词，pos_tag() 词性标注，WordNetLemmatizer() 词形还原
+word_tokenize() 分词，pos_tag() 词性标注，lemmatize() 词形还原
 
 分别通过 crf、dnn、rnn、rnn_bi、rnn_bi_crf 预测，rnn_bi_crf 无法
 
