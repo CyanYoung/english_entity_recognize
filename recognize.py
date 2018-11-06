@@ -36,6 +36,13 @@ def load_nn_crf(name, embed_mat, seq_len, class_num, paths):
     return model
 
 
+def ind2label(label_inds):
+    ind_labels = dict()
+    for word, ind in label_inds.items():
+        ind_labels[ind] = word
+    return ind_labels
+
+
 wnl = nltk.WordNetLemmatizer()
 ed = enchant.Dict('en_US')
 
@@ -56,9 +63,7 @@ with open(path_embed, 'rb') as f:
 with open(path_label_ind, 'rb') as f:
     label_inds = pk.load(f)
 
-ind_labels = dict()
-for label, ind in label_inds.items():
-    ind_labels[ind] = label
+ind_labels = ind2label(label_inds)
 
 funcs = {'rnn_bi_crf': rnn_bi_crf}
 
