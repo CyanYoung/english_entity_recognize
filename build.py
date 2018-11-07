@@ -28,6 +28,8 @@ with open(path_embed, 'rb') as f:
 with open(path_label_ind, 'rb') as f:
     label_inds = pk.load(f)
 
+class_num = len(label_inds)
+
 funcs = {'dnn': dnn,
          'rnn': rnn,
          'rnn_bi': rnn_bi,
@@ -93,10 +95,9 @@ def nn_compile(name, embed_mat, seq_len, class_num):
     return model
 
 
-def nn_fit(name, epoch, embed_mat, label_inds, path_feats):
+def nn_fit(name, epoch, embed_mat, class_num, path_feats):
     train_sents, train_labels, dev_sents, dev_labels = nn_load(path_feats)
     seq_len = len(train_sents[0])
-    class_num = len(label_inds)
     model = nn_compile(name, embed_mat, seq_len, class_num)
     check_point = ModelCheckpoint(map_item(name, paths), monitor='val_loss', verbose=True, save_best_only=True)
     model.fit(train_sents, train_labels, batch_size=batch_size, epochs=epoch,
@@ -113,11 +114,11 @@ if __name__ == '__main__':
     path_feats['label_train'] = 'feat/nn/win_label_train.pkl'
     path_feats['sent_dev'] = 'feat/nn/win_sent_dev.pkl'
     path_feats['label_dev'] = 'feat/nn/win_label_dev.pkl'
-    nn_fit('dnn', 10, embed_mat, label_inds, path_feats)
+    nn_fit('dnn', 10, embed_mat, class_num, path_feats)
     path_feats['sent_train'] = 'feat/nn/seq_sent_train.pkl'
     path_feats['label_train'] = 'feat/nn/seq_label_train.pkl'
     path_feats['sent_dev'] = 'feat/nn/seq_sent_dev.pkl'
     path_feats['label_dev'] = 'feat/nn/seq_label_dev.pkl'
-    nn_fit('rnn', 10, embed_mat, label_inds, path_feats)
-    nn_fit('rnn_bi', 10, embed_mat, label_inds, path_feats)
-    nn_fit('rnn_bi_crf', 10, embed_mat, label_inds, path_feats)
+    nn_fit('rnn', 10, embed_mat, class_num, path_feats)
+    nn_fit('rnn_bi', 10, embed_mat, class_num, path_feats)
+    nn_fit('rnn_bi_crf', 10, embed_mat, class_num, path_feats)
