@@ -3,7 +3,6 @@ import pickle as pk
 import numpy as np
 
 import nltk
-import enchant
 
 from featurize import sent2feat
 
@@ -43,8 +42,7 @@ def ind2label(label_inds):
     return ind_labels
 
 
-wnl = nltk.WordNetLemmatizer()
-ed = enchant.Dict('en_US')
+lemmatizer = nltk.WordNetLemmatizer()
 
 path_crf = 'model/crf.pkl'
 with open(path_crf, 'rb') as f:
@@ -131,7 +129,7 @@ if __name__ == '__main__':
         text = input('text: ')
         words = nltk.word_tokenize(text)
         pairs = nltk.pos_tag(words)
-        words = [wnl.lemmatize(word, map_pos(tag)) for word, tag in pairs]
+        words = [lemmatizer.lemmatize(word, map_pos(tag)) for word, tag in pairs]
         tags = [tag for word, tag in pairs]
         print('crf: %s' % crf_predict(words, tags))
         print('dnn: %s' % dnn_predict(words, 'dnn'))
