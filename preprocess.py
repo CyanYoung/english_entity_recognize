@@ -8,8 +8,8 @@ import enchant
 from util import map_pos
 
 
-wnl = nltk.WordNetLemmatizer()
-ed = enchant.Dict('en_US')
+lemmatizer = nltk.WordNetLemmatizer()
+checker = enchant.Dict('en_US')
 
 
 def prepare(path_txt, path_json, detail):
@@ -22,9 +22,9 @@ def prepare(path_txt, path_json, detail):
             if line and not re.findall('-DOCSTART-', line):
                 quaple = dict()
                 word, pos, chunk, label = line.split()
-                word = wnl.lemmatize(word, map_pos(pos))
-                if detail and word.isalpha() and word.islower() and not ed.check(word):
-                    errors[word] = ed.suggest(word)
+                word = lemmatizer.lemmatize(word, map_pos(pos))
+                if detail and word.isalpha() and word.islower() and not checker.check(word):
+                    errors[word] = checker.suggest(word)
                 quaple['word'] = word
                 quaple['pos'] = pos
                 quaple['chunk'] = chunk
