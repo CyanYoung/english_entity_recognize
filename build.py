@@ -19,7 +19,7 @@ from util import map_item
 
 
 min_freq = 2
-batch_size = 32
+batch_size = 128
 
 path_embed = 'feat/nn/embed.pkl'
 path_label_ind = 'feat/nn/label_ind.pkl'
