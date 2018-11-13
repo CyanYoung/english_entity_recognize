@@ -65,8 +65,8 @@ def trunc(sents, path_sent, path_label):
     for seq in seqs:
         buf_seq = buf + seq + buf
         for u_bound in range(win_len, len(buf_seq) + 1):
-            trunc_win = pad_sequences([buf_seq[:u_bound]], maxlen=win_len)[0]
-            trunc_wins.append(trunc_win)
+            l_bound = u_bound - win_len
+            trunc_wins.append(buf_seq[l_bound:u_bound])
     trunc_wins = np.array(trunc_wins)
     with open(path_label_ind, 'rb') as f:
         label_inds = pk.load(f)
