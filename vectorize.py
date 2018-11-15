@@ -11,7 +11,7 @@ from util import sent2label
 
 
 embed_len = 200
-max_vocab = 5000
+max_vocab = 10000
 win_dist = 3
 seq_len = 200
 
