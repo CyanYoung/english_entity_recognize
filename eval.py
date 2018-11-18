@@ -7,10 +7,12 @@ from recognize import crf_predict, dnn_predict, rnn_predict
 
 from util import map_item
 
-
+path = 'data/test.json'
 path_label_ind = 'feat/nn/label_ind.pkl'
 with open(path_label_ind, 'rb') as f:
     label_inds = pk.load(f)
+with open(path, 'r') as f:
+    sents = json.load(f)
 
 slots = list(label_inds.keys())
 slots.remove('N')
@@ -47,9 +49,6 @@ def test(name, sents):
 
 
 if __name__ == '__main__':
-    path = 'data/test.json'
-    with open(path, 'r') as f:
-        sents = json.load(f)
     test('crf', sents)
     test('dnn', sents)
     test('rnn', sents)
