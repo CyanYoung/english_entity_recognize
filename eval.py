@@ -7,6 +7,7 @@ from recognize import crf_predict, dnn_predict, rnn_predict
 
 from util import map_item
 
+
 path = 'data/test.json'
 path_label_ind = 'feat/nn/label_ind.pkl'
 with open(path_label_ind, 'rb') as f:
