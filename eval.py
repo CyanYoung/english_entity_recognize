@@ -45,8 +45,7 @@ def test(name, sents):
         preds = [pred for word, pred in pairs]
         pred_mat.append(preds)
     f1 = flat_f1_score(label_mat, pred_mat, average='weighted', labels=slots)
-    print('\n%s %s %.2f' % (name, ' f1:', f1))
-    print('%s %s %.2f' % (name, 'acc:', flat_accuracy_score(label_mat, pred_mat)))
+    print('\n%s f1: %.2f - acc: %.2f' % (name, f1, flat_accuracy_score(label_mat, pred_mat)))
 
 
 if __name__ == '__main__':
