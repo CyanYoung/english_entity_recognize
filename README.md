@@ -40,6 +40,6 @@ load_model() 或 model_from_json()，调用 nn_compile() 并 load_weights()
 
 #### 7.eval
 
-分别调用 crf_predict()、dnn_predict()、rnn_predict()，flat_accuracy_score()
+分别调用 crf_predict()、dnn_predict()、rnn_predict()
 
-计算准确率，去除 N、O 标签后 flat_f1_score() 计算 f1 值
+flat_accuracy_score() 计算准确率，去除 N、O 标签后 flat_f1_score() 计算 f1 值
