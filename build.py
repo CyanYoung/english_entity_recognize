@@ -82,12 +82,10 @@ def nn_compile(name, embed_mat, seq_len, class_num):
     if name == 'rnn_bi_crf':
         crf = K_CRF(class_num)
         output = func(embed_input, crf)
-        loss = crf.loss_function
-        acc = crf.accuracy
+        loss, acc = crf.loss_function, crf.accuracy
     else:
         output = func(embed_input, class_num)
-        loss = 'categorical_crossentropy'
-        acc = 'accuracy'
+        loss, acc = 'categorical_crossentropy', 'accuracy'
     model = Model(input, output)
     model.summary()
     plot_model(model, map_item(name + '_plot', paths), show_shapes=True)
