@@ -28,12 +28,10 @@ funcs = {'crf': crf_predict,
 
 def test(name, sents):
     predict = map_item(name, funcs)
-    label_mat = list()
-    pred_mat = list()
+    label_mat, pred_mat = list(), list()
     for text, quaples in sents.items():
         words = text.split()
-        tags = list()
-        labels = list()
+        tags, labels = list(), list()
         for quaple in quaples:
             tags.append(quaple['pos'])
             labels.append(quaple['label'])

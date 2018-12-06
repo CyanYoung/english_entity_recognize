@@ -46,8 +46,7 @@ def sent2feat(quaples):
 def featurize(path_data, path_sent, path_label):
     with open(path_data, 'r') as f:
         sents = json.load(f)
-    sent_feats = list()
-    labels = list()
+    sent_feats, labels = list(), list()
     for quaples in sents.values():
         sent_feats.append(sent2feat(quaples))
         labels.append(sent2label(quaples))
