@@ -21,13 +21,11 @@ slots.remove('O')
 
 funcs = {'crf': crf_predict,
          'dnn': dnn_predict,
-         'rnn': rnn_predict,
-         'rnn_bi': rnn_predict,
-         'rnn_bi_crf': rnn_predict}
+         'rnn': rnn_predict}
 
 
 def test(name, sents):
-    predict = map_item(name, funcs)
+    predict = map_item(name[:3], funcs)
     label_mat, pred_mat = list(), list()
     for text, quaples in sents.items():
         words = text.split()

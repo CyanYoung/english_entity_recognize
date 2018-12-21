@@ -18,19 +18,18 @@ from nn_arch import rnn_bi_crf
 from util import map_pos, map_item
 
 
-def define_nn_crf(name, embed_mat, seq_len, class_num):
+def define_nn_crf(embed_mat, seq_len, class_num):
     vocab_num, embed_len = embed_mat.shape
     embed = Embedding(input_dim=vocab_num, output_dim=embed_len, input_length=seq_len)
     input = Input(shape=(seq_len,))
     embed_input = embed(input)
-    func = map_item(name, funcs)
     crf = K_CRF(class_num)
-    output = func(embed_input, crf)
+    output = rnn_bi_crf(embed_input, crf)
     return Model(input, output)
 
 
 def load_nn_crf(name, embed_mat, seq_len, class_num, paths):
-    model = define_nn_crf(name, embed_mat, seq_len, class_num)
+    model = define_nn_crf(embed_mat, seq_len, class_num)
     model.load_weights(map_item(name, paths))
     return model
 
@@ -63,8 +62,6 @@ with open(path_label_ind, 'rb') as f:
 
 ind_labels = ind2label(label_inds)
 
-funcs = {'rnn_bi_crf': rnn_bi_crf}
-
 paths = {'dnn': 'model/dnn.h5',
          'rnn': 'model/rnn.h5',
          'rnn_bi': 'model/rnn_bi.h5',
@@ -74,6 +71,14 @@ models = {'dnn': load_model(map_item('dnn', paths)),
           'rnn': load_model(map_item('rnn', paths)),
           'rnn_bi': load_model(map_item('rnn_bi', paths)),
           'rnn_bi_crf': load_nn_crf('rnn_bi_crf', embed_mat, seq_len, len(label_inds), paths)}
+
+
+def clean(text):
+    words = nltk.word_tokenize(text)
+    pairs = nltk.pos_tag(words)
+    words = [lemmatizer.lemmatize(word, map_pos(tag)) for word, tag in pairs]
+    tags = [tag for word, tag in pairs]
+    return words, tags
 
 
 def crf_predict(words, tags):
@@ -127,10 +132,7 @@ def rnn_predict(words, name):
 if __name__ == '__main__':
     while True:
         text = input('text: ')
-        words = nltk.word_tokenize(text)
-        pairs = nltk.pos_tag(words)
-        words = [lemmatizer.lemmatize(word, map_pos(tag)) for word, tag in pairs]
-        tags = [tag for word, tag in pairs]
+        words, tags = clean(text)
         print('crf: %s' % crf_predict(words, tags))
         print('dnn: %s' % dnn_predict(words, 'dnn'))
         print('rnn: %s' % rnn_predict(words, 'rnn'))
