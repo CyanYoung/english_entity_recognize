@@ -36,8 +36,8 @@ def load_nn_crf(name, embed_mat, seq_len, class_num, paths):
 
 def ind2label(label_inds):
     ind_labels = dict()
-    for word, ind in label_inds.items():
-        ind_labels[ind] = word
+    for label, ind in label_inds.items():
+        ind_labels[ind] = label
     return ind_labels
 
 
