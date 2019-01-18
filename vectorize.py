@@ -12,7 +12,7 @@ from util import sent2label
 
 embed_len = 200
 max_vocab = 10000
-win_dist = 3
+win_len = 7
 seq_len = 200
 
 path_word_vec = 'feat/nn/word_vec.pkl'
@@ -61,7 +61,7 @@ def trunc(sents, path_sent, path_label):
     seqs = model.texts_to_sequences(texts)
     trunc_wins = list()
     win_len = win_dist * 2 + 1
-    buf = list(np.zeros(win_dist, dtype=int))
+    buf = list(np.zeros((win_len - 1) / 2, dtype=int))
     for seq in seqs:
         buf_seq = buf + seq + buf
         for u_bound in range(win_len, len(buf_seq) + 1):
@@ -112,21 +112,22 @@ def vectorize(paths, mode):
     if mode == 'train':
         embed(sents, path_word2ind, path_word_vec, path_embed)
         label2ind(sents, path_label_ind)
-    trunc(sents, paths['win_sent'], paths['win_label'])
-    pad(sents, paths['seq_sent'], paths['seq_label'])
+    trunc(sents, paths['dnn_sent'], paths['dnn_label'])
+    pad(sents, paths['rnn_sent'], paths['rnn_label'])
 
 
 if __name__ == '__main__':
     paths = dict()
+    prefix = 'feat/nn/'
     paths['data'] = 'data/train.json'
-    paths['win_sent'] = 'feat/nn/win_sent_train.pkl'
-    paths['win_label'] = 'feat/nn/win_label_train.pkl'
-    paths['seq_sent'] = 'feat/nn/seq_sent_train.pkl'
-    paths['seq_label'] = 'feat/nn/seq_label_train.pkl'
+    paths['dnn_sent'] = prefix + 'dnn_sent_train.pkl'
+    paths['dnn_label'] = prefix + 'dnn_label_train.pkl'
+    paths['rnn_sent'] = prefix + 'rnn_sent_train.pkl'
+    paths['rnn_label'] = prefix + 'rnn_label_train.pkl'
     vectorize(paths, 'train')
     paths['data'] = 'data/dev.json'
-    paths['win_sent'] = 'feat/nn/win_sent_dev.pkl'
-    paths['win_label'] = 'feat/nn/win_label_dev.pkl'
-    paths['seq_sent'] = 'feat/nn/seq_sent_dev.pkl'
-    paths['seq_label'] = 'feat/nn/seq_label_dev.pkl'
+    paths['dnn_sent'] = prefix + 'dnn_sent_dev.pkl'
+    paths['dnn_label'] = prefix + 'dnn_label_dev.pkl'
+    paths['rnn_sent'] = prefix + 'rnn_sent_dev.pkl'
+    paths['rnn_label'] = prefix + 'rnn_label_dev.pkl'
     vectorize(paths, 'dev')
