@@ -18,7 +18,7 @@ from nn_arch import dnn, rnn, rnn_bi, rnn_bi_crf
 from util import map_item
 
 
-min_freq = 2
+min_freq = 5
 batch_size = 128
 
 path_embed = 'feat/nn/embed.pkl'
@@ -103,20 +103,22 @@ def nn_fit(name, epoch, embed_mat, class_num, path_feats):
 
 
 if __name__ == '__main__':
-    path_sent = 'feat/crf/sent_train.json'
-    path_label = 'feat/crf/label_train.json'
+    prefix = 'feat/crf/'
+    path_sent = prefix + 'sent_train.json'
+    path_label = prefix + 'label_train.json'
     path_crf = 'model/crf.pkl'
     crf_fit(path_sent, path_label, path_crf)
     path_feats = dict()
-    path_feats['sent_train'] = 'feat/nn/win_sent_train.pkl'
-    path_feats['label_train'] = 'feat/nn/win_label_train.pkl'
-    path_feats['sent_dev'] = 'feat/nn/win_sent_dev.pkl'
-    path_feats['label_dev'] = 'feat/nn/win_label_dev.pkl'
+    prefix = 'feat/nn/'
+    path_feats['sent_train'] = prefix + 'dnn_sent_train.pkl'
+    path_feats['label_train'] = prefix + 'dnn_label_train.pkl'
+    path_feats['sent_dev'] = prefix + 'dnn_sent_dev.pkl'
+    path_feats['label_dev'] = prefix + 'dnn_label_dev.pkl'
     nn_fit('dnn', 10, embed_mat, class_num, path_feats)
-    path_feats['sent_train'] = 'feat/nn/seq_sent_train.pkl'
-    path_feats['label_train'] = 'feat/nn/seq_label_train.pkl'
-    path_feats['sent_dev'] = 'feat/nn/seq_sent_dev.pkl'
-    path_feats['label_dev'] = 'feat/nn/seq_label_dev.pkl'
+    path_feats['sent_train'] = prefix + 'rnn_sent_train.pkl'
+    path_feats['label_train'] = prefix + 'rnn_label_train.pkl'
+    path_feats['sent_dev'] = prefix + 'rnn_sent_dev.pkl'
+    path_feats['label_dev'] = prefix + 'rnn_label_dev.pkl'
     nn_fit('rnn', 10, embed_mat, class_num, path_feats)
     nn_fit('rnn_bi', 10, embed_mat, class_num, path_feats)
     nn_fit('rnn_bi_crf', 10, embed_mat, class_num, path_feats)
