@@ -13,7 +13,7 @@ from keras_contrib.layers import CRF as K_CRF
 
 from keras.preprocessing.sequence import pad_sequences
 
-from nn_arch import rnn_bi_crf
+from nn_arch import rnn_crf
 
 from util import map_pos, map_item
 
@@ -24,7 +24,7 @@ def define_nn_crf(embed_mat, seq_len, class_num):
     input = Input(shape=(seq_len,))
     embed_input = embed(input)
     crf = K_CRF(class_num)
-    output = rnn_bi_crf(embed_input, crf)
+    output = rnn_crf(embed_input, crf)
     return Model(input, output)
 
 
@@ -47,7 +47,7 @@ path_crf = 'model/crf.pkl'
 with open(path_crf, 'rb') as f:
     crf = pk.load(f)
 
-win_dist = 3
+win_len = 7
 seq_len = 200
 
 path_word2ind = 'model/word2ind.pkl'
@@ -64,13 +64,11 @@ ind_labels = ind2label(label_inds)
 
 paths = {'dnn': 'model/dnn.h5',
          'rnn': 'model/rnn.h5',
-         'rnn_bi': 'model/rnn_bi.h5',
-         'rnn_bi_crf': 'model/rnn_bi_crf.h5'}
+         'rnn_crf': 'model/rnn_crf.h5'}
 
 models = {'dnn': load_model(map_item('dnn', paths)),
           'rnn': load_model(map_item('rnn', paths)),
-          'rnn_bi': load_model(map_item('rnn_bi', paths)),
-          'rnn_bi_crf': load_nn_crf('rnn_bi_crf', embed_mat, seq_len, len(label_inds), paths)}
+          'rnn_crf': load_nn_crf('rnn_crf', embed_mat, seq_len, len(label_inds), paths)}
 
 
 def clean(text):
@@ -99,8 +97,7 @@ def crf_predict(words, tags):
 def dnn_predict(words, name):
     seq = word2ind.texts_to_sequences([' '.join(words)])[0]
     trunc_wins = list()
-    win_len = win_dist * 2 + 1
-    buf = list(np.zeros(win_dist, dtype=int))
+    buf = [0] * int((win_len - 1) / 2)
     buf_seq = buf + seq + buf
     for u_bound in range(win_len, len(buf_seq) + 1):
         trunc_win = pad_sequences([buf_seq[:u_bound]], maxlen=win_len)[0]
@@ -136,5 +133,4 @@ if __name__ == '__main__':
         print('crf: %s' % crf_predict(words, tags))
         print('dnn: %s' % dnn_predict(words, 'dnn'))
         print('rnn: %s' % rnn_predict(words, 'rnn'))
-        print('rnn_bi: %s' % rnn_predict(words, 'rnn_bi'))
-        print('rnn_bi_crf: %s' % rnn_predict(words, 'rnn_bi_crf'))
+        print('rnn_crf: %s' % rnn_predict(words, 'rnn_crf'))

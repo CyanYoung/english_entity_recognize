@@ -30,4 +30,4 @@ nn_fit() 分别通过 dnn、rnn、rnn_bi、rnn_bi_crf，train 80% / dev 20% 划�
 
 word_tokenize() 分词、pos_tag() 词性标注、lemmatize() 词形还原
 
-rnn_bi_crf  无法使用 load_model()、先 nn_compile() 再 load_weights()
+rnn_bi_crf 无法使用 load_model()、先 nn_compile() 再 load_weights()

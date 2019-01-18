@@ -13,7 +13,7 @@ from keras.utils import plot_model
 
 from keras_contrib.layers import CRF as K_CRF
 
-from nn_arch import dnn, rnn, rnn_bi, rnn_bi_crf
+from nn_arch import dnn, rnn, rnn_crf
 
 from util import map_item
 
@@ -32,17 +32,14 @@ class_num = len(label_inds)
 
 funcs = {'dnn': dnn,
          'rnn': rnn,
-         'rnn_bi': rnn_bi,
-         'rnn_bi_crf': rnn_bi_crf}
+         'rnn_crf': rnn_crf}
 
 paths = {'dnn': 'model/dnn.h5',
          'rnn': 'model/rnn.h5',
-         'rnn_bi': 'model/rnn_bi.h5',
-         'rnn_bi_crf': 'model/rnn_bi_crf.h5',
+         'rnn_crf': 'model/rnn_crf.h5',
          'dnn_plot': 'model/plot/dnn.png',
          'rnn_plot': 'model/plot/rnn.png',
-         'rnn_bi_plot': 'model/plot/rnn_bi.png',
-         'rnn_bi_crf_plot': 'model/plot/rnn_bi_crf.png'}
+         'rnn_crf_plot': 'model/plot/rnn_crf.png'}
 
 
 def crf_fit(path_sent, path_label, path_crf):
@@ -79,7 +76,7 @@ def nn_compile(name, embed_mat, seq_len, class_num):
     input = Input(shape=(seq_len,))
     embed_input = embed(input)
     func = map_item(name, funcs)
-    if name == 'rnn_bi_crf':
+    if name == 'rnn_crf':
         crf = K_CRF(class_num)
         output = func(embed_input, crf)
         loss, acc = crf.loss_function, crf.accuracy
@@ -120,5 +117,4 @@ if __name__ == '__main__':
     path_feats['sent_dev'] = prefix + 'rnn_sent_dev.pkl'
     path_feats['label_dev'] = prefix + 'rnn_label_dev.pkl'
     nn_fit('rnn', 10, embed_mat, class_num, path_feats)
-    nn_fit('rnn_bi', 10, embed_mat, class_num, path_feats)
-    nn_fit('rnn_bi_crf', 10, embed_mat, class_num, path_feats)
+    nn_fit('rnn_crf', 10, embed_mat, class_num, path_feats)

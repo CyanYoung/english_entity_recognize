@@ -60,7 +60,7 @@ def align_dnn(sents, path_sent, path_label):
         model = pk.load(f)
     seqs = model.texts_to_sequences(texts)
     trunc_wins = list()
-    buf = list(np.zeros(int((win_len - 1) / 2), dtype=int))
+    buf = [0] * int((win_len - 1) / 2)
     for seq in seqs:
         buf_seq = buf + seq + buf
         for u_bound in range(win_len, len(buf_seq) + 1):

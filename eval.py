@@ -48,5 +48,4 @@ if __name__ == '__main__':
     test('crf', sents)
     test('dnn', sents)
     test('rnn', sents)
-    test('rnn_bi', sents)
-    test('rnn_bi_crf', sents)
+    test('rnn_crf', sents)
