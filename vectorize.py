@@ -54,14 +54,13 @@ def label2ind(sents, path_label_ind):
         pk.dump(label_inds, f)
 
 
-def trunc(sents, path_sent, path_label):
+def align_dnn(sents, path_sent, path_label):
     texts = sents.keys()
     with open(path_word2ind, 'rb') as f:
         model = pk.load(f)
     seqs = model.texts_to_sequences(texts)
     trunc_wins = list()
-    win_len = win_dist * 2 + 1
-    buf = list(np.zeros((win_len - 1) / 2, dtype=int))
+    buf = list(np.zeros(int((win_len - 1) / 2), dtype=int))
     for seq in seqs:
         buf_seq = buf + seq + buf
         for u_bound in range(win_len, len(buf_seq) + 1):
@@ -82,7 +81,7 @@ def trunc(sents, path_sent, path_label):
         pk.dump(inds, f)
 
 
-def pad(sents, path_sent, path_label):
+def align_rnn(sents, path_sent, path_label):
     texts = sents.keys()
     with open(path_word2ind, 'rb') as f:
         model = pk.load(f)
@@ -112,8 +111,8 @@ def vectorize(paths, mode):
     if mode == 'train':
         embed(sents, path_word2ind, path_word_vec, path_embed)
         label2ind(sents, path_label_ind)
-    trunc(sents, paths['dnn_sent'], paths['dnn_label'])
-    pad(sents, paths['rnn_sent'], paths['rnn_label'])
+    align_dnn(sents, paths['dnn_sent'], paths['dnn_label'])
+    align_rnn(sents, paths['rnn_sent'], paths['rnn_label'])
 
 
 if __name__ == '__main__':
