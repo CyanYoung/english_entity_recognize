@@ -1,5 +1,4 @@
-from keras.layers import Dense, LSTM, Dropout
-from keras.layers import Flatten, TimeDistributed, Bidirectional
+from keras.layers import Dense, LSTM, Dropout, Flatten, Bidirectional
 
 
 def dnn(embed_input, class_num):
@@ -16,20 +15,18 @@ def dnn(embed_input, class_num):
 def rnn(embed_input, class_num):
     ra = LSTM(200, activation='tanh', return_sequences=True)
     da = Dense(class_num, activation='softmax')
-    ta = TimeDistributed(da)
     x = ra(embed_input)
     x = Dropout(0.5)(x)
-    return ta(x)
+    return da(x)
 
 
 def rnn_bi(embed_input, class_num):
     ra = LSTM(200, activation='tanh', return_sequences=True)
     ba = Bidirectional(ra, merge_mode='concat')
     da = Dense(class_num, activation='softmax')
-    ta = TimeDistributed(da)
     x = ba(embed_input)
     x = Dropout(0.5)(x)
-    return ta(x)
+    return da(x)
 
 
 def rnn_bi_crf(embed_input, crf):
