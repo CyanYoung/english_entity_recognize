@@ -1,8 +1,6 @@
 import json
 import pickle as pk
 
-from random import shuffle
-
 from sklearn_crfsuite import CRF as S_CRF
 
 from keras.models import Model
@@ -47,9 +45,6 @@ def crf_fit(path_sent, path_label, path_crf):
         sent_feats = json.load(f)
     with open(path_label, 'r') as f:
         labels = json.load(f)
-    sents_labels = list(zip(sent_feats, labels))
-    shuffle(sents_labels)
-    sent_feats, labels = zip(*sents_labels)
     crf = S_CRF(algorithm='lbfgs', min_freq=min_freq, c1=0.1, c2=0.1,
                 max_iterations=100, all_possible_transitions=True)
     crf.fit(sent_feats, labels)
