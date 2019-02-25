@@ -32,7 +32,8 @@ funcs = {'dnn': dnn,
          'rnn': rnn,
          'rnn_crf': rnn_crf}
 
-paths = {'dnn': 'model/dnn.h5',
+paths = {'crf': 'model/crf.pkl',
+         'dnn': 'model/dnn.h5',
          'rnn': 'model/rnn.h5',
          'rnn_crf': 'model/rnn_crf.h5',
          'dnn_plot': 'model/plot/dnn.png',
@@ -40,7 +41,7 @@ paths = {'dnn': 'model/dnn.h5',
          'rnn_crf_plot': 'model/plot/rnn_crf.png'}
 
 
-def crf_fit(path_sent, path_label, path_crf):
+def crf_fit(path_sent, path_label):
     with open(path_sent, 'r') as f:
         sents = json.load(f)
     with open(path_label, 'r') as f:
@@ -48,7 +49,7 @@ def crf_fit(path_sent, path_label, path_crf):
     crf = S_CRF(algorithm='lbfgs', min_freq=min_freq, c1=0.1, c2=0.1,
                 max_iterations=100, all_possible_transitions=True)
     crf.fit(sents, labels)
-    with open(path_crf, 'wb') as f:
+    with open(map_item('crf', paths), 'wb') as f:
         pk.dump(crf, f)
 
 
@@ -98,8 +99,7 @@ if __name__ == '__main__':
     prefix = 'feat/crf/'
     path_sent = prefix + 'sent_train.json'
     path_label = prefix + 'label_train.json'
-    path_crf = 'model/crf.pkl'
-    crf_fit(path_sent, path_label, path_crf)
+    crf_fit(path_sent, path_label)
     path_feats = dict()
     prefix = 'feat/nn/'
     path_feats['sent_train'] = prefix + 'dnn_sent_train.pkl'
