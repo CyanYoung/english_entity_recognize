@@ -86,8 +86,8 @@ def crf_predict(words, tags):
         quaple['word'] = word
         quaple['pos'] = tag
         quaples.append(quaple)
-    sent_feat = sent2feat(quaples)
-    preds = crf.predict([sent_feat])[0]
+    sent = sent2feat(quaples)
+    preds = crf.predict([sent])[0]
     pairs = list()
     for word, pred in zip(words, preds):
         pairs.append((word, pred))

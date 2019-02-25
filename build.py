@@ -42,12 +42,12 @@ paths = {'dnn': 'model/dnn.h5',
 
 def crf_fit(path_sent, path_label, path_crf):
     with open(path_sent, 'r') as f:
-        sent_feats = json.load(f)
+        sents = json.load(f)
     with open(path_label, 'r') as f:
         labels = json.load(f)
     crf = S_CRF(algorithm='lbfgs', min_freq=min_freq, c1=0.1, c2=0.1,
                 max_iterations=100, all_possible_transitions=True)
-    crf.fit(sent_feats, labels)
+    crf.fit(sents, labels)
     with open(path_crf, 'wb') as f:
         pk.dump(crf, f)
 

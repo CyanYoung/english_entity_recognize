@@ -2,7 +2,7 @@
 
 #### 1.preprocess
 
-prepare() 将每行数据分割为 (word, pos, chunk, label) 四元组
+prepare() 将每行数据处理为 (word, pos, chunk, label) 的四元组
 
 map_pos() 将标准词性映射为 lemmatize() 可识别的，enchant 检查拼写错误
 
