@@ -66,7 +66,8 @@ paths = {'dnn': 'model/dnn.h5',
          'rnn': 'model/rnn.h5',
          'rnn_crf': 'model/rnn_crf.h5'}
 
-models = {'dnn': load_model(map_item('dnn', paths)),
+models = {'crf': crf,
+          'dnn': load_model(map_item('dnn', paths)),
           'rnn': load_model(map_item('rnn', paths)),
           'rnn_crf': load_nn_crf('rnn_crf', embed_mat, seq_len, len(label_inds), paths)}
 
@@ -87,7 +88,8 @@ def crf_predict(words, tags):
         quaple['pos'] = tag
         quaples.append(quaple)
     sent = sent2feat(quaples)
-    preds = crf.predict([sent])[0]
+    model = map_item('crf', models)
+    preds = model.predict([sent])[0]
     pairs = list()
     for word, pred in zip(words, preds):
         pairs.append((word, pred))
