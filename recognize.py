@@ -121,7 +121,8 @@ def rnn_predict(words, name):
     model = map_item(name, models)
     probs = model.predict(pad_seq)[0]
     inds = np.argmax(probs, axis=1)
-    preds = [ind_labels[ind] for ind in inds[-len(words):]]
+    bound = min(len(words), seq_len)
+    preds = [ind_labels[ind] for ind in inds[-bound:]]
     pairs = list()
     for word, pred in zip(words, preds):
         pairs.append((word, pred))
