@@ -57,7 +57,7 @@ def featurize(path_data, path_sent, path_label):
 
 
 if __name__ == '__main__':
-    prefix = 'feat/crf/'
+    prefix = 'feat/ml/'
     path_data = 'data/train.json'
     path_sent = prefix + 'sent_train.json'
     path_label = prefix + 'label_train.json'
