@@ -1,7 +1,5 @@
 import json
 
-from util import sent2label
-
 
 def sent2feat(quaples):
     sent_feat = list()
@@ -41,6 +39,13 @@ def sent2feat(quaples):
             word_feat['eos'] = True
         sent_feat.append(word_feat)
     return sent_feat
+
+
+def sent2label(quaples):
+    label = list()
+    for quaple in quaples:
+        label.append(quaple['label'])
+    return label
 
 
 def featurize(path_data, path_sent, path_label):

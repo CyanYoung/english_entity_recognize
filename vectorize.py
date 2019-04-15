@@ -7,7 +7,7 @@ from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.utils import to_categorical
 
-from util import sent2label
+from featurize import sent2label
 
 
 embed_len = 200
