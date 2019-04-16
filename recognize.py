@@ -80,7 +80,8 @@ def clean(text):
     return words, tags
 
 
-def crf_predict(words, tags):
+def crf_predict(text):
+    words, tags = clean(text)
     quaples = list()
     for word, tag in zip(words, tags):
         quaple = dict()
@@ -96,7 +97,8 @@ def crf_predict(words, tags):
     return pairs
 
 
-def dnn_predict(words, name):
+def dnn_predict(text, name):
+    words, tags = clean(text)
     seq = word2ind.texts_to_sequences([' '.join(words)])[0]
     trunc_wins = list()
     buf = [0] * int((win_len - 1) / 2)
@@ -115,7 +117,8 @@ def dnn_predict(words, name):
     return pairs
 
 
-def rnn_predict(words, name):
+def rnn_predict(text, name):
+    words, tags = clean(text)
     seq = word2ind.texts_to_sequences([' '.join(words)])[0]
     pad_seq = pad_sequences([seq], maxlen=seq_len)
     model = map_item(name, models)
@@ -132,8 +135,7 @@ def rnn_predict(words, name):
 if __name__ == '__main__':
     while True:
         text = input('text: ')
-        words, tags = clean(text)
-        print('crf: %s' % crf_predict(words, tags))
-        print('dnn: %s' % dnn_predict(words, 'dnn'))
-        print('rnn: %s' % rnn_predict(words, 'rnn'))
-        print('rnn_crf: %s' % rnn_predict(words, 'rnn_crf'))
+        print('crf: %s' % crf_predict(text))
+        print('dnn: %s' % dnn_predict(text, 'dnn'))
+        print('rnn: %s' % rnn_predict(text, 'rnn'))
+        print('rnn_crf: %s' % rnn_predict(text, 'rnn_crf'))
