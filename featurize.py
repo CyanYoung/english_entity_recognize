@@ -1,6 +1,9 @@
 import json
 
-from util import sent2label
+from vectorize import label2ind
+
+
+path_label_ind = 'feat/label_ind.pkl'
 
 
 def sent2feat(quaples):
@@ -43,9 +46,17 @@ def sent2feat(quaples):
     return sent_feat
 
 
+def sent2label(quaples):
+    label = list()
+    for quaple in quaples:
+        label.append(quaple['label'])
+    return label
+
+
 def featurize(path_data, path_sent, path_label):
     with open(path_data, 'r') as f:
         sents = json.load(f)
+    label2ind(sents, path_label_ind)
     sent_feats, labels = list(), list()
     for quaples in sents.values():
         sent_feats.append(sent2feat(quaples))

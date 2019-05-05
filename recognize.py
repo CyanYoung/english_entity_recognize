@@ -50,7 +50,11 @@ def crf_predict(words, tags, name):
         quaples.append(quaple)
     sent = sent2feat(quaples)
     model = map_item(name, models)
-    return model.predict([sent])[0]
+    preds = model.predict([sent])[0]
+    inds = list()
+    for pred in preds:
+        inds.append(label_inds[pred])
+    return inds
 
 
 def dnn_predict(words, name):
@@ -87,7 +91,7 @@ seq_len = 200
 
 path_word2ind = 'model/word2ind.pkl'
 path_embed = 'feat/nn/embed.pkl'
-path_label_ind = 'feat/nn/label_ind.pkl'
+path_label_ind = 'feat/label_ind.pkl'
 with open(path_word2ind, 'rb') as f:
     word2ind = pk.load(f)
 with open(path_embed, 'rb') as f:
@@ -129,10 +133,7 @@ def predict(text, name):
     if __name__ == '__main__':
         pairs = list()
         for word, pred in zip(words, preds):
-            if name == 'crf':
-                pairs.append((word, pred))
-            else:
-                pairs.append((word, ind_labels[pred]))
+            pairs.append((word, ind_labels[pred]))
         return pairs
     else:
         return preds

@@ -7,8 +7,6 @@ from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.utils import to_categorical
 
-from util import sent2label
-
 
 embed_len = 200
 max_vocab = 10000
@@ -18,7 +16,7 @@ seq_len = 200
 path_word_vec = 'feat/nn/word_vec.pkl'
 path_word2ind = 'model/word2ind.pkl'
 path_embed = 'feat/nn/embed.pkl'
-path_label_ind = 'feat/nn/label_ind.pkl'
+path_label_ind = 'feat/label_ind.pkl'
 
 
 def embed(sents, path_word2ind, path_word_vec, path_embed):
@@ -44,7 +42,8 @@ def embed(sents, path_word2ind, path_word_vec, path_embed):
 def label2ind(sents, path_label_ind):
     labels = list()
     for quaples in sents.values():
-        labels.extend(sent2label(quaples))
+        for quaple in quaples:
+            labels.append(quaple['label'])
     labels = sorted(list(set(labels)))
     label_inds = dict()
     label_inds['N'] = 0

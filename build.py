@@ -20,7 +20,7 @@ min_freq = 5
 batch_size = 128
 
 path_embed = 'feat/nn/embed.pkl'
-path_label_ind = 'feat/nn/label_ind.pkl'
+path_label_ind = 'feat/label_ind.pkl'
 with open(path_embed, 'rb') as f:
     embed_mat = pk.load(f)
 with open(path_label_ind, 'rb') as f:
