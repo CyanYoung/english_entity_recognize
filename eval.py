@@ -13,11 +13,11 @@ with open(path_test, 'r') as f:
 
 class_num = len(label_inds)
 
-full_slots = list(ind_labels.keys())
+full_set = list(ind_labels.keys())
 
-part_slots = full_slots[:]
-part_slots.remove(label_inds['N'])
-part_slots.remove(label_inds['O'])
+part_set = full_set[:]
+part_set.remove(label_inds['N'])
+part_set.remove(label_inds['O'])
 
 paths = {'crf': 'metric/crf.csv',
          'dnn': 'metric/dnn.csv',
@@ -40,13 +40,13 @@ def test(name, sents):
         else:
             preds = func(words, name)
         flat_preds.extend(preds)
-    precs = precision_score(flat_labels, flat_preds, average=None, labels=full_slots)
-    recs = recall_score(flat_labels, flat_preds, average=None, labels=full_slots)
+    precs = precision_score(flat_labels, flat_preds, average=None, labels=full_set)
+    recs = recall_score(flat_labels, flat_preds, average=None, labels=full_set)
     with open(map_item(name, paths), 'w') as f:
         f.write('label,prec,rec' + '\n')
         for i in range(1, class_num):
             f.write('%s,%.2f,%.2f\n' % (ind_labels[i], precs[i], recs[i]))
-    f1 = f1_score(flat_labels, flat_preds, average='weighted', labels=part_slots)
+    f1 = f1_score(flat_labels, flat_preds, average='weighted', labels=part_set)
     print('\n%s f1: %.2f - acc: %.2f' % (name, f1, accuracy_score(flat_labels, flat_preds)))
 
 
