@@ -1,47 +1,44 @@
 import json
-import pickle as pk
 
-from sklearn_crfsuite.metrics import flat_f1_score, flat_accuracy_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
-from recognize import crf_predict, dnn_predict, rnn_predict
+from recognize import label_inds, ind_labels, predict
 
 from util import map_item
 
 
-path_sent = 'data/test.json'
-path_label_ind = 'feat/nn/label_ind.pkl'
-with open(path_sent, 'r') as f:
+path_test = 'data/test.json'
+with open(path_test, 'r') as f:
     sents = json.load(f)
-with open(path_label_ind, 'rb') as f:
-    label_inds = pk.load(f)
 
-slots = list(label_inds.keys())
-slots.remove('N')
-slots.remove('O')
+class_num = len(label_inds)
 
-funcs = {'crf': crf_predict,
-         'dnn': dnn_predict,
-         'rnn': rnn_predict}
+slots = list(ind_labels.keys())
+slots.remove(label_inds['N'])
+slots.remove(label_inds['O'])
+
+paths = {'crf': 'metric/crf.csv',
+         'dnn': 'metric/dnn.csv',
+         'rnn': 'metric/rnn.csv',
+         'rnn_crf': 'metric/rnn_crf.csv'}
 
 
 def test(name, sents):
-    predict = map_item(name[:3], funcs)
-    label_mat, pred_mat = list(), list()
-    for text, quaples in sents.items():
-        words = text.split()
-        tags, labels = list(), list()
-        for quaple in quaples:
-            tags.append(quaple['pos'])
-            labels.append(quaple['label'])
-        label_mat.append(labels)
-        if name == 'crf':
-            pairs = predict(words, tags)
-        else:
-            pairs = predict(words, name)
-        preds = [pred for word, pred in pairs]
-        pred_mat.append(preds)
-    f1 = flat_f1_score(label_mat, pred_mat, average='weighted', labels=slots)
-    print('\n%s f1: %.2f - acc: %.2f' % (name, f1, flat_accuracy_score(label_mat, pred_mat)))
+    flat_labels, flat_preds = [0], [0]
+    for text, pairs in sents.items():
+        labels = list()
+        for pair in pairs:
+            labels.append(label_inds[pair['label']])
+        flat_labels.extend(labels)
+        flat_preds.extend(predict(text, name))
+    precs = precision_score(flat_labels, flat_preds, average=None)
+    recs = recall_score(flat_labels, flat_preds, average=None)
+    with open(map_item(name, paths), 'w') as f:
+        f.write('label,prec,rec' + '\n')
+        for i in range(1, class_num):
+            f.write('%s,%.2f,%.2f\n' % (ind_labels[i], precs[i], recs[i]))
+    f1 = f1_score(flat_labels, flat_preds, average='weighted', labels=slots)
+    print('\n%s f1: %.2f - acc: %.2f' % (name, f1, accuracy_score(flat_labels, flat_preds)))
 
 
 if __name__ == '__main__':

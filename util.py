@@ -10,6 +10,13 @@ def map_pos(pos):
         return 'n'
 
 
+def sent2label(quaples):
+    label = list()
+    for quaple in quaples:
+        label.append(quaple['label'])
+    return label
+
+
 def map_item(name, items):
     if name in items:
         return items[name]
