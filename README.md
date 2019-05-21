@@ -12,7 +12,7 @@ map_pos() 将标准词性映射为 lemmatize() 可识别的，enchant 检查拼�
 
 #### 3.featurize
 
-crf 特征化，sent2feat() 将词转为小写后，增加是否句首、句尾等特征
+ml 特征化，sent2feat() 将词转为小写后，增加是否句首、句尾等特征
 
 #### 4.vectorize
 
